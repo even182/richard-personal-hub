@@ -1,0 +1,16 @@
+IATA,ICAO,City,AirportName,Country,CountryCode,Continent,Latitude,Longitude
+BKK,VTBS,Bangkok,Suvarnabhumi,Thailand,TH,Asia,13.69,100.7501
+FUK,RJFF,Fukuoka,Fukuoka,Japan,JP,Asia,33.5859,130.4507
+HIJ,RJOA,Hiroshima,Hiroshima,Japan,JP,,34.4361,132.9194
+HKG,VHHH,Hong Kong,Hong Kong International,Hong Kong,HK,Asia,22.308,113.9185
+HND,RJTT,Tokyo,Haneda,Japan,JP,,35.5494,139.7798
+ICN,RKSI,Seoul,Incheon,South Korea,KR,Asia,37.4602,126.4407
+KIX,RJBB,Osaka,Kansai,Japan,JP,,34.4347,135.244
+LAX,KLAX,Los Angeles,Los Angeles International,United States,US,N America,33.9416,-118.4085
+NGO,RJGG,Nagoya,Chubu Centrair International,Japan,JP,Asia,34.8584,136.8054
+NRT,RJAA,Tokyo,Narita,Japan,JP,Asia,35.772,140.3929
+OKA,ROAH,Naha,Naha,Japan,JP,Asia,26.1958,127.6459
+ONT,KONT,Ontario,Ontario International,United States,US,N America,34.056,-117.6012
+SIN,WSSS,Singapore,Changi,Singapore,SG,Asia,1.3644,103.9915
+TPE,RCTP,Taipei,Taoyuan,Taiwan,TW,,25.0777,121.2328
+TSA,RCSS,Taipei,Taipei Songshan Airport,Taiwan,TW,,25.0697,121.5525

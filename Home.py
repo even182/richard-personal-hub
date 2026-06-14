@@ -5,7 +5,7 @@ st.set_page_config(
     page_title="Richard Personal Hub",
     page_icon="🏠",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="collapsed",
 )
 
 APP_DIR = Path(__file__).resolve().parent

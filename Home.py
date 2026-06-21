@@ -13,6 +13,7 @@ PAGES_DIR = APP_DIR / "pages"
 
 RICHARD_PAGE = PAGES_DIR / "Richard.py"
 FLIGHT_PAGE = PAGES_DIR / "Flight_Log.py"
+RICHARD_LEARNING_PAGE = PAGES_DIR / "Richard_Learning.py"
 
 st.markdown(
     """
@@ -53,7 +54,7 @@ st.markdown(
         border: 1px solid #e5e7eb;
         border-radius: 20px;
         padding: 28px 26px;
-        min-height: 220px;
+        min-height: 240px;
         box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
     }
     .card-icon {
@@ -94,6 +95,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+
 def render_card(icon: str, title: str, text: str, tags: list[str]):
     tag_html = "".join([f'<span class="tag">{t}</span>' for t in tags])
     st.markdown(
@@ -108,11 +110,12 @@ def render_card(icon: str, title: str, text: str, tags: list[str]):
         unsafe_allow_html=True,
     )
 
+
 st.markdown(
     """
 <div class="hero">
     <div class="hero-title">Richard Personal Hub</div>
-    <div class="hero-subtitle">投資資產追蹤、個人飛行履歷與未來更多個人資料儀表板的入口網站。</div>
+    <div class="hero-subtitle">投資資產追蹤、個人飛行履歷、學習歷程與未來更多個人資料儀表板的入口網站。</div>
 </div>
     """,
     unsafe_allow_html=True,
@@ -120,7 +123,7 @@ st.markdown(
 
 st.markdown('<div class="section-title">目前頁面</div>', unsafe_allow_html=True)
 
-col1, col2 = st.columns(2, gap="large")
+col1, col2, col3 = st.columns(3, gap="large")
 
 with col1:
     render_card(
@@ -145,6 +148,18 @@ with col2:
         st.page_link("pages/Flight_Log.py", label="前往 Flight Log", icon="✈️")
     else:
         st.warning("找不到 pages/Flight_Log.py，請先把 Flight Log 檔案放到 pages 資料夾並命名為 Flight_Log.py。")
+
+with col3:
+    render_card(
+        "🎓",
+        "Richard's Learning Journey",
+        "Record Richard's learning timeline, awards, projects, reading log, skill growth, and yearly review.",
+        ["Learning", "Awards", "Portfolio"],
+    )
+    if RICHARD_LEARNING_PAGE.exists():
+        st.page_link("pages/Richard_Learning.py", label="Go to Learning Journey", icon="🎓")
+    else:
+        st.warning("找不到 pages/Richard_Learning.py，請先把 Richard's Learning Journey 檔案放到 pages 資料夾並命名為 Richard_Learning.py。")
 
 st.markdown(
     """

@@ -22,6 +22,7 @@ from datetime import date
 from pathlib import Path
 from typing import Iterable, Optional
 import html
+import re
 
 import pandas as pd
 import streamlit as st
@@ -300,7 +301,19 @@ def clean_df(df: pd.DataFrame) -> pd.DataFrame:
     df.columns = [str(c).strip() for c in df.columns]
     for col in df.columns:
         if col.lower() in {"date", "lastupdated"}:
-            df[col] = pd.to_datetime(df[col], errors="coerce")
+            # Keep month-only dates such as "2026-09" as text so the site
+            # does not incorrectly display the first day of the month.
+            month_only = df[col].apply(
+                lambda v: isinstance(v, str)
+                and bool(re.fullmatch(r"\d{4}[-/]\d{1,2}", v.strip()))
+            )
+            parsed_dates = pd.to_datetime(df[col], errors="coerce")
+            if month_only.any():
+                parsed_dates = parsed_dates.astype(object)
+                parsed_dates.loc[month_only] = (
+                    df.loc[month_only, col].astype(str).str.replace("/", "-", regex=False)
+                )
+            df[col] = parsed_dates
         elif col.lower() == "year":
             df[col] = pd.to_numeric(df[col], errors="coerce").astype("Int64")
         else:
@@ -311,6 +324,9 @@ def clean_df(df: pd.DataFrame) -> pd.DataFrame:
 def format_date(value: object) -> str:
     if pd.isna(value) or value == "":
         return ""
+    if isinstance(value, str) and re.fullmatch(r"\d{4}[-/]\d{1,2}", value.strip()):
+        parts = re.split(r"[-/]", value.strip())
+        return f"{parts[0]}-{int(parts[1]):02d}"
     try:
         return pd.to_datetime(value).strftime("%Y-%m-%d")
     except Exception:
@@ -382,7 +398,7 @@ def resolve_image(filename: object, search_groups: Iterable[str]) -> Optional[Pa
 
 
 @st.cache_data(show_spinner=False)
-def load_workbook(path: str) -> dict[str, pd.DataFrame]:
+def load_workbook(path: str, updated_ns: int) -> dict[str, pd.DataFrame]:
     file_path = Path(path)
     if not file_path.exists():
         return {}
@@ -554,7 +570,7 @@ def show_missing_setup() -> None:
 # -----------------------------------------------------------------------------
 # Load data
 # -----------------------------------------------------------------------------
-data = load_workbook(str(DATA_PATH))
+data = load_workbook(str(DATA_PATH), DATA_PATH.stat().st_mtime_ns if DATA_PATH.exists() else 0)
 if not data:
     show_missing_setup()
     st.stop()

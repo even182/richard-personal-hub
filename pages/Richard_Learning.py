@@ -497,7 +497,10 @@ def sort_newest(df: pd.DataFrame) -> pd.DataFrame:
     result = df.copy()
     if "Date" in result.columns:
         result["_sort_date"] = pd.to_datetime(result["Date"], errors="coerce")
-        result = result.sort_values("_sort_date", ascending=False).drop(columns=["_sort_date"])
+        # Keep the Excel row order for records sharing the same date.
+        result = result.sort_values(
+            "_sort_date", ascending=False, kind="stable"
+        ).drop(columns=["_sort_date"])
     elif "Year" in result.columns:
         result = result.sort_values("Year", ascending=False)
     return result

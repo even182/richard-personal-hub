@@ -751,12 +751,16 @@ with tab_overview:
         st.info("No learning records yet.")
     else:
         for _, row in latest_updates.iterrows():
-            render_basic_card(
-                title=row.get("Title", ""),
-                meta=" · ".join([format_date(row.get("Date", "")), str(row.get("Category", ""))]),
-                body=row.get("Description", ""),
-                tags=[str(row.get("Category", "")), str(row.get("Privacy", ""))],
-                link=row.get("Link", ""),
+            # Reuse LearningTimeline.Image in the Overview, including existing
+            # award photos when one learning milestone is also an award.
+            render_image_card(
+                row=row,
+                title_col="Title",
+                body_col="Description",
+                image_groups=["learning", "projects", "awards"],
+                meta_parts=[format_date(row.get("Date", "")), row.get("Category", "")],
+                tag_parts=["Category", "Privacy"],
+                link_col="Link",
             )
 
 
@@ -782,7 +786,9 @@ with tab_timeline:
                 row=row,
                 title_col="Title",
                 body_col="Description",
-                image_groups=["learning", "projects"],
+                # LearningTimeline.Image may refer to a photo already stored
+                # in the awards gallery (e.g., the DELF certificate ceremony).
+                image_groups=["learning", "projects", "awards"],
                 meta_parts=[format_date(row.get("Date", "")), row.get("Category", ""), row.get("Privacy", "")],
                 tag_parts=["Category", "Privacy"],
                 link_col="Link",
@@ -885,7 +891,7 @@ with tab_reading:
 
         for _, row in sort_newest(filtered).iterrows():
             stars = "⭐" * max(0, min(5, safe_int(row.get("Rating", 0))))
-            image_path = resolve_image(row.get("Image", ""), ["learning", "projects"])
+            image_path = resolve_image(row.get("Image", ""), ["reviews", "learning", "projects"])
             if image_path:
                 col_img, col_text = st.columns([0.8, 2.2], gap="medium")
                 with col_img:
